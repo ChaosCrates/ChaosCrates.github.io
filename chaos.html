@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chaos Crates</title>
+
+<!-- Wallpoet Font -->
+<link href="https://fonts.googleapis.com/css2?family=Wallpoet&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin:0;
+    font-family:'Wallpoet', cursive;
+    background:linear-gradient(135deg,#0a0a0f,#1a0033);
+    color:white;
+    text-align:center;
+}
+
+h2 { margin-top:30px; }
+
+/* GRID */
+.container {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:25px;
+    padding:20px;
+}
+
+/* CARD */
+.card {
+    background:#111;
+    border-radius:15px;
+    width:300px;
+    padding:15px;
+    box-shadow:0 0 20px #6a00ff55;
+    position:relative;
+}
+
+.card img {
+    width:100%;
+    height:200px;
+    object-fit:cover;
+    border-radius:12px;
+    margin-bottom:10px;
+}
+
+/* BUTTONS */
+button {
+    margin-top:8px;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    background:#6a00ff;
+    color:white;
+    cursor:pointer;
+    width:90%;
+}
+
+button:hover { background:#9d4dff; }
+
+/* INPUTS */
+input {
+    display:block;
+    margin:10px auto;
+    padding:12px;
+    width:85%;
+    max-width:320px;
+    border-radius:10px;
+    border:none;
+    background:#1c1c2b;
+    color:white;
+    outline:none;
+}
+
+/* CART */
+.cart {
+    margin-top:20px;
+    padding:15px;
+    background:#0f0f1a;
+}
+
+/* COMING SOON OVERLAY */
+.overlay {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    color:#ff4d4d;
+    font-size:2em;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:12px;
+    pointer-events:none;
+}
+</style>
+</head>
+<body>
+
+<h1>CHAOS CRATES 📦</h1>
+
+<h2>Crates</h2>
+<div class="container">
+
+<!-- REG -->
+<div class="card">
+<img src="https://raw.githubusercontent.com/ChaosCrates/ChaosCratesAssets/main/regular.png">
+<h3>Reg Pass</h3>
+<p>2 packages/month</p>
+<button onclick="addToCart('Reg One Time',36)">One Time $36</button>
+<button onclick="addToCart('Reg Monthly',3)">Monthly $3</button>
+</div>
+
+<!-- DELUXE -->
+<div class="card">
+<img src="https://raw.githubusercontent.com/ChaosCrates/ChaosCratesAssets/main/deluxe.png">
+<h3>Deluxe Pass</h3>
+<p>3 packages/month</p>
+<button onclick="addToCart('Deluxe One Time',54)">One Time $54</button>
+<button onclick="addToCart('Deluxe Monthly',4.5)">Monthly $4.50</button>
+</div>
+
+<!-- LEGENDARY -->
+<div class="card">
+<img src="https://raw.githubusercontent.com/ChaosCrates/ChaosCratesAssets/main/legendary.png">
+<h3>Legendary</h3>
+<p>4 packages/month</p>
+<button onclick="addToCart('Legendary One Time',72)">One Time $72</button>
+<button onclick="addToCart('Legendary Monthly',6)">Monthly $6</button>
+</div>
+
+</div>
+
+<h2>KR Clothing 👕</h2>
+<div class="container">
+
+<!-- Hoodie -->
+<div class="card">
+<img src="https://raw.githubusercontent.com/ChaosCrates/ChaosCratesAssets/main/holo.png">
+<h3>Guaranteed Foil or Better</h3>
+<button onclick="addToCart('Guaranteed Foil or Better',25)">$10</button>
+</div>
+
+<!-- Shirt (COMING SOON) -->
+<div class="card">
+<img src="https://raw.githubusercontent.com/ChaosCrates/ChaosCratesAssets/main/shirt.png">
+<h3>Chaos Shirt</h3>
+<div class="overlay">COMING SOON</div>
+</div>
+
+<!-- Hat (COMING SOON) -->
+<div class="card">
+<img src="https://raw.githubusercontent.com/ChaosCrates/ChaosCratesAssets/main/hat.png">
+<h3>Chaos Hat</h3>
+<div class="overlay">COMING SOON</div>
+</div>
+
+</div>
+
+<div class="cart">
+<h2>Cart 🛒</h2>
+<p id="cartItems">Nothing yet</p>
+<p id="total">Total: $0</p>
+
+<input id="discount" placeholder="Discount code">
+<button onclick="applyDiscount()">Apply Discount</button>
+</div>
+
+<h2>Checkout</h2>
+<input id="name" placeholder="Full Name">
+<input id="address" placeholder="Address">
+<input id="phone" placeholder="Phone">
+
+<button onclick="checkout()">Place Order 🚀</button>
+
+<script>
+let cart = [];
+let total = 0;
+let discountApplied = false;
+
+function addToCart(name, price){
+    cart.push({name, price});
+    total += price;
+    updateCart();
+}
+
+function updateCart(){
+    let text = cart.map(i => i.name + " ($" + i.price + ")").join(", ");
+    document.getElementById("cartItems").innerText = text || "Nothing yet";
+    document.getElementById("total").innerText = "Total: $" + total.toFixed(2);
+}
+
+function applyDiscount(){
+    let code = document.getElementById("discount").value;
+    if(code === "CHAOS10" && !discountApplied){
+        total *= 0.9;
+        discountApplied = true;
+        alert("10% off 😎");
+        updateCart();
+    } else {
+        alert("Invalid or already used 💀");
+    }
+}
+
+function checkout(){
+    let name = document.getElementById("name").value;
+    let address = document.getElementById("address").value;
+    let phone = document.getElementById("phone").value;
+
+    if(!name || !address || !phone || cart.length === 0){
+        alert("Fill everything 😭");
+        return;
+    }
+
+    let items = cart.map(i => i.name).join(", ");
+
+    const webhook = "https://discord.com/api/webhooks/1465496912974315694/SVKa3SxLA-o4sZbddUsWIS-6udSkopEIgd5t3XS7azC0pd5xPze8Bbhf_Jbp6IkWt-Z2";
+
+    fetch(webhook,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+            content:"📦 NEW CHAOS ORDER",
+            embeds:[{
+                title:"Order",
+                fields:[
+                    {name:"Name", value:name},
+                    {name:"Address", value:address},
+                    {name:"Phone", value:phone},
+                    {name:"Items", value:items},
+                    {name:"Total", value:"$"+total.toFixed(2)}
+                ]
+            }]
+        })
+    }).then(()=>alert("Order sent 😎"))
+    .catch(()=>alert("Error 💀"));
+}
+</script>
+
+</body>
+</html>
